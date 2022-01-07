@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+import { selectCars } from "../features/car/carSlice";
+import { useSelector } from "react-redux";
 
 function Header() {
     const [burgerStatus, setBurgerStatus] = useState(false);
+    const cars = useSelector(selectCars);
 
     return (
         <Container>
@@ -12,10 +15,12 @@ function Header() {
                 <img src="/images/logo.svg" alt="logo" />
             </a>
             <Menu>
-                <a href="#">Model S</a>
-                <a href="#">Model 3</a>
-                <a href="#">Model X</a>
-                <a href="#">Model Y</a>
+                {cars &&
+                    cars.map((car, index) => (
+                        <a key={index} href="#">
+                            {car}
+                        </a>
+                    ))}
             </Menu>
             <RightMenu>
                 <a href="#">Shop</a>
@@ -26,7 +31,12 @@ function Header() {
                 <CloseWrapper>
                     <CustomClose onClick={() => setBurgerStatus(false)} />
                 </CloseWrapper>
-
+                {cars &&
+                    cars.map((car, index) => (
+                        <li key={index}>
+                            <a href="#">{car}</a>
+                        </li>
+                    ))}
                 <li>
                     <a href="#">Existing Inventory</a>
                 </li>
@@ -44,15 +54,6 @@ function Header() {
                 </li>
                 <li>
                     <a href="#">Semi</a>
-                </li>
-                <li>
-                    <a href="#">Charging Station</a>
-                </li>
-                <li>
-                    <a href="#">Existing Inventory</a>
-                </li>
-                <li>
-                    <a href="#">Existing Inventory</a>
                 </li>
             </BurgerNav>
         </Container>
@@ -120,6 +121,7 @@ const BurgerNav = styled.div`
     text-align: start;
     transform: ${(props) =>
         props.show ? "translateX(0)" : "translateX(100%)"};
+    transition: transform 0.2s ease-in;
     li {
         padding: 15px 0;
         border-bottom: 1px solid rgba(0, 0, 0, 0.2);
